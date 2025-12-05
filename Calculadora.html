@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Pro - NATP</title>
+    <link rel="stylesheet" href="Style-NATP.css">
+    <script src="Script-NATP.js" defer></script>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" value="0" readonly>
+
+        <div class="buttons">
+            <button onclick="calculateSquare()" class="scientific">x²</button>
+            <button onclick="calculateSqrt()" class="scientific">√</button>
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="deleteLast()" class="action">DEL</button>
+
+            <button onclick="appendToDisplay('(')" class="scientific">(</button>
+            <button onclick="appendToDisplay(')')" class="scientific">)</button>
+            <button onclick="calculatePercentage()" class="action">%</button>
+            <button onclick="appendToDisplay('/')" class="operator">/</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('*')" class="operator">X</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('-')" class="operator">-</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('+')" class="operator">+</button>
+
+            <button onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="calculateResult()" class="equals">=</button>
+        </div>
+    </div>
+
+</body>
+</html>

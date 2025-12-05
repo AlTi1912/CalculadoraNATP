@@ -1,0 +1,84 @@
+body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    background-color: #e8eaed; /* Gris Google */
+    font-family: 'Roboto', sans-serif;
+}
+
+.calculator {
+    width: 350px; /* Un poco más ancha */
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    background-color: #202124; /* Fondo oscuro estilo iPhone/Android */
+    overflow: hidden;
+}
+
+#display {
+    width: 100%;
+    height: 100px;
+    border: none;
+    background-color: #202124;
+    color: white;
+    text-align: right;
+    padding: 20px;
+    font-size: 3.5em;
+    font-weight: 300;
+    box-sizing: border-box;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 10px;
+    gap: 10px; /* Espacio entre botones */
+}
+
+.buttons button {
+    padding: 15px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 50px; /* Botones redondos/ovalados */
+    cursor: pointer;
+    background-color: #3c4043; /* Gris oscuro */
+    color: white;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.buttons button:hover {
+    background-color: #5f6368;
+}
+
+/* Clase para simular click por teclado */
+.buttons button:active, .buttons button.pressed {
+    transform: scale(0.95);
+    background-color: #70757a;
+}
+
+/* Colores Específicos */
+.buttons .operator {
+    background-color: #8ab4f8; /* Azul Google */
+    color: #202124;
+    font-weight: bold;
+}
+
+.buttons .scientific {
+    background-color: #303134; /* Gris ligeramente diferente */
+    font-size: 1.2em;
+}
+
+.buttons .action {
+    background-color: #a8c7fa; /* Azul claro */
+    color: black;
+}
+
+.buttons .clear {
+    background-color: #f28b82; /* Rojo claro */
+    color: black;
+}
+
+.buttons .equals {
+    background-color: #4c91ff;
+    color: #202124;
+    font-weight: bold;
+}
