@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Llave Champions 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una columna de análisis; la llave es un diagrama ancho con scroll propio, el resto se apila. */
+:root {
+  --bg: #e8ebee;
+  --panel: #f6f7f8;
+  --ink: #14181d;
+  --muted: #5a6370;
+  --line: #ccd3da;
+  --gold: #946a17;
+  --gold-soft: #e9dcc0;
+  --red: #b8323c;
+  --good: #2c7a57;
+  --amer: #2f6fae;
+  --pac: #a2457e;
+  --emea: #4f7f3a;
+  --cn: #b45a1f;
+  --f-display: "Chakra Petch", "Bahnschrift", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216; --panel: #171b21; --ink: #e8e6e0; --muted: #9aa3ad; --line: #2b323b;
+    --gold: #d8ae5a; --gold-soft: #3a3020; --red: #e2646c; --good: #5cc092;
+    --amer: #6aa3dc; --pac: #d47fb3; --emea: #8dbb73; --cn: #e0925a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1216; --panel: #171b21; --ink: #e8e6e0; --muted: #9aa3ad; --line: #2b323b;
+  --gold: #d8ae5a; --gold-soft: #3a3020; --red: #e2646c; --good: #5cc092;
+  --amer: #6aa3dc; --pac: #d47fb3; --emea: #8dbb73; --cn: #e0925a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 60px; display: grid; gap: 36px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.05; text-transform: uppercase; }
+h2 { font-size: 22px; text-transform: uppercase; }
+h3 { font-size: 16px; text-transform: uppercase; }
+.eyebrow { font: 600 12px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); }
+.muted { color: var(--muted); }
+.mono, .num { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+p { margin: 0; max-width: 70ch; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+header.top { display: grid; gap: 12px; }
+header.top .rule { display: flex; align-items: center; gap: 10px; }
+header.top .rule::after { content: ""; flex: 1; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.lede { color: var(--muted); }
+.status { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 3px; padding: 6px 12px; font-size: 13px; }
+.btn:hover { border-color: var(--gold); }
+.btn.primary { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 600; }
+
+section { display: grid; gap: 14px; min-width: 0; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+
+/* ---- Tabla de título ---- */
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; }
+th { font: 600 11px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+td.num, th.num { text-align: right; }
+.team { display: flex; align-items: center; gap: 8px; }
+.tag { font: 600 15px/1 var(--f-display); letter-spacing: 0.02em; }
+.reg { font: 600 9.5px/1 var(--f-display); letter-spacing: 0.1em; padding: 3px 5px; border-radius: 2px; color: var(--bg); }
+.reg.Americas { background: var(--amer); } .reg.Pacific { background: var(--pac); } .reg.EMEA { background: var(--emea); } .reg.China { background: var(--cn); }
+.bar { position: relative; height: 8px; background: var(--line); border-radius: 1px; min-width: 90px; }
+.bar > i { position: absolute; inset: 0 auto 0 0; background: var(--gold); border-radius: 1px; }
+.cell-bar { display: grid; grid-template-columns: 54px 1fr; gap: 8px; align-items: center; min-width: 150px; }
+.stack { display: flex; height: 10px; min-width: 160px; border-radius: 1px; overflow: hidden; background: var(--line); }
+.stack > i { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend b { width: 10px; height: 10px; display: inline-block; border-radius: 1px; }
+.delta-up { color: var(--good); } .delta-down { color: var(--red); }
+
+/* ---- Llave ---- */
+.bracket-scroll { overflow-x: auto; padding-bottom: 6px; }
+.bracket { display: grid; gap: 22px; min-width: 980px; }
+.lane { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: center; }
+.lane-title { font: 600 11px/1 var(--f-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+.lane-title::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.col { display: grid; gap: 12px; }
+.col-h { font: 600 11px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.match { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; display: grid; text-align: left; padding: 0; width: 100%; }
+.match.sel { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.mh { display: flex; justify-content: space-between; gap: 6px; padding: 6px 10px; font: 500 11px/1.2 var(--f-data); color: var(--muted); border-bottom: 1px solid var(--line); cursor: pointer; }
+.mh:hover { color: var(--gold); }
+.slot { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 7px 10px; position: relative; border: 0; background: none; text-align: left; width: 100%; }
+.slot + .slot { border-top: 1px solid var(--line); }
+.slot .fill { position: absolute; inset: 0 auto 0 0; background: var(--gold-soft); z-index: 0; }
+.slot > * { position: relative; z-index: 1; }
+.slot .pct { font: 500 13px/1 var(--f-data); }
+.slot.win .tag::after { content: " ✓"; color: var(--good); }
+.slot.lose { opacity: 0.45; }
+.slot:hover .tag { color: var(--gold); }
+.slot[disabled] { cursor: default; }
+.slot[disabled]:hover .tag { color: inherit; }
+.maybe { padding: 8px 10px; display: grid; gap: 4px; font-size: 12.5px; cursor: pointer; }
+.maybe .row { display: flex; justify-content: space-between; gap: 8px; }
+.maybe .lab { font: 600 10px/1.4 var(--f-display); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.gf { border-color: var(--gold); }
+.hint { font-size: 12.5px; color: var(--muted); }
+
+/* ---- Análisis ---- */
+.analysis { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px; display: grid; gap: 22px; min-width: 0; }
+.pickers { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pickers select { background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 6px 8px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.seg button { border: 0; background: none; padding: 6px 12px; font-size: 13px; }
+.seg button[aria-pressed="true"] { background: var(--gold); color: var(--bg); font-weight: 600; }
+.verdict { display: grid; gap: 8px; }
+.verdict .names { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.verdict .big { font: 600 clamp(28px, 6vw, 44px)/1 var(--f-display); }
+.split { display: flex; height: 14px; border-radius: 2px; overflow: hidden; }
+.split .a { background: var(--gold); } .split .b { background: var(--line); }
+.chain { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.step { border-top: 2px solid var(--line); padding-top: 8px; display: grid; gap: 2px; }
+.step.final { border-top-color: var(--gold); }
+.step .k { font: 600 11px/1.3 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.step .v { font: 500 20px/1.2 var(--f-data); }
+.step .d { font-size: 12px; color: var(--muted); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+.grid2 > * { min-width: 0; }
+.maps td { white-space: normal; font-size: 13px; }
+.mbar { position: relative; height: 10px; background: var(--line); min-width: 100px; }
+.mbar i { position: absolute; top: 0; bottom: 0; background: var(--gold); }
+.mbar::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--muted); }
+.gs { font: 400 12px/1.4 var(--f-data); color: var(--muted); }
+.gs .w { color: var(--good); } .gs .l { color: var(--red); }
+.h2h-list { display: grid; gap: 0; }
+.h2h-row { display: grid; grid-template-columns: 82px 1fr auto auto; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px; align-items: baseline; }
+.h2h-row .sc { font: 500 13px/1 var(--f-data); }
+.h2h-row .wt { font: 400 11.5px/1 var(--f-data); color: var(--muted); min-width: 64px; text-align: right; }
+.pill { font: 600 10px/1 var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 6px; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); }
+.pill.on { border-color: var(--gold); color: var(--gold); }
+.note { font-size: 13px; color: var(--muted); }
+.result-box { border-top: 1px dashed var(--line); padding-top: 16px; display: grid; gap: 10px; }
+.maprows { display: grid; gap: 6px; }
+.maprow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+.maprow select, .maprow input { background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 4px 6px; }
+.maprow input { width: 56px; font-family: var(--f-data); }
+
+/* ---- Pick'em ---- */
+.picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+.pick-list { display: grid; }
+.pick { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); align-items: center; font-size: 13.5px; }
+.pick .num { color: var(--muted); font-size: 12.5px; }
+
+/* ---- Ajustes y datos ---- */
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 12px 16px; }
+summary { cursor: pointer; font: 600 14px/1.4 var(--f-display); text-transform: uppercase; letter-spacing: 0.06em; }
+.settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px 28px; padding-top: 14px; }
+.setting { display: grid; gap: 4px; font-size: 13px; }
+.setting .lab { display: flex; justify-content: space-between; gap: 8px; }
+.setting input[type="range"] { width: 100%; accent-color: var(--gold); }
+.setting .help { font-size: 12px; color: var(--muted); }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding-top: 14px; }
+.group h3 { margin-bottom: 6px; }
+.gm { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; display: grid; gap: 2px; }
+.gm .ph { font: 600 10px/1.3 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.method { display: grid; gap: 10px; padding-top: 14px; font-size: 14px; }
+.method ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 75ch; }
+.busy { opacity: 0.55; transition: opacity 0.15s; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="top">
+    <div class="rule"><span class="eyebrow">VALORANT Champions · Shanghai 2026 · Playoffs</span></div>
+    <h1>Llave Champions 2026</h1>
+    <p class="lede">Probabilidades de cada cruce a partir del rendimiento ronda a ronda en la fase de grupos, el pool de mapas con su veto y los cara a cara de 2026. Marca los resultados reales a medida que se juegan y la llave se recalcula.</p>
+    <div class="status" id="status"></div>
+  </header>
+
+  <section id="sec-titulo">
+    <div class="sec-head"><h2>Quién gana el torneo</h2><span class="hint">Enumeración exacta de los 16.384 desenlaces posibles de la llave</span></div>
+    <div class="scroll"><table id="tabla-titulo"></table></div>
+    <div class="legend" id="legend-puestos"></div>
+  </section>
+
+  <section id="sec-llave">
+    <div class="sec-head"><h2>Llave</h2><span class="hint">Toca un equipo para marcarlo como ganador real · toca la cabecera para analizar el cruce</span></div>
+    <div class="bracket-scroll"><div class="bracket" id="bracket"></div></div>
+  </section>
+
+  <section id="sec-analisis">
+    <div class="sec-head"><h2>Análisis del cruce</h2></div>
+    <div class="analysis" id="analisis"></div>
+  </section>
+
+  <section id="sec-pickem">
+    <div class="sec-head"><h2>Pick'em</h2><span class="hint">14 selecciones, 1 punto por acierto</span></div>
+    <div class="picks" id="pickem"></div>
+  </section>
+
+  <section>
+    <details id="det-ajustes">
+      <summary>Ajustes del modelo</summary>
+      <div class="settings" id="ajustes"></div>
+    </details>
+    <details>
+      <summary>Resultados de la fase de grupos</summary>
+      <div class="groups" id="grupos"></div>
+    </details>
+    <details>
+      <summary>Cómo se calcula</summary>
+      <div class="method">
+        <ol>
+          <li><b>Previo de temporada.</b> Cada equipo parte de un Elo calibrado con Santiago, London, EWC y Stage 2 (el mismo de la predicción anterior), convertido a probabilidad de ganar una ronda. Los equipos con poco historial internacional tienen más incertidumbre.</li>
+          <li><b>Fase de grupos.</b> Se ajustan juntos los 16 equipos con cada ronda jugada en Shanghai. Ganar 13-3 a un rival flojo vale menos que ganar 13-11 a uno fuerte, porque la fuerza del rival se estima a la vez. Cada ronda cuenta como una fracción de evidencia (las rondas no son independientes: economía, momentum).</li>
+          <li><b>Pool de mapas.</b> Cada equipo tiene una desviación propia por mapa, muy contraída hacia cero porque cada equipo jugó solo 5-7 mapas.</li>
+          <li><b>Cara a cara.</b> Para cada pareja se comparan los mapas ganados en 2026 con lo que el modelo esperaba. Las series pesan menos con el tiempo (vida media configurable), la fase regular pesa 0,8 y los cruces entre regiones cuentan la mitad. Un pseudo-conteo de mapas evita que tres series cambien demasiado la predicción.</li>
+          <li><b>Veto.</b> Se simula el veto de Champions (Bo3: ban, ban, pick, pick, ban, ban, decider; Bo5: ban, ban, cuatro picks, decider). Cada equipo prefiere banear sus peores mapas relativos y elegir los mejores, con algo de aleatoriedad.</li>
+          <li><b>Serie y llave.</b> La serie se gana con la mayoría de mapas. Se promedia sobre la incertidumbre de los parámetros y después se recorren todos los desenlaces de la doble eliminación.</li>
+        </ol>
+        <p class="note">Límites: no modela lados (ataque/defensa), parche, agentes ni cambios de roster. Algunas series de la temporada tienen marcador de mapas o fecha aproximados (marcados con ≈). Los datos están en <span class="mono">data.js</span> y se pueden corregir.</p>
+      </div>
+    </details>
+  </section>
+</div>
+<script src="data.js"></script>
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
