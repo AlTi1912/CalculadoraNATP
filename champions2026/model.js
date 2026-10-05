@@ -457,7 +457,7 @@
       }
     })(0, 0);
 
-    return { partidos: P, res, puesto, masProbable: { p: mejor.p * norm, ganadores: mejor.w }, pickem: { esperado: opt.s, maximo: P.reduce((t, m) => t + m.pts, 0), ganadores: opt.w } };
+    return { partidos: P, res, puesto, masProbable: { p: mejor.p * norm, ganadores: mejor.w }, distPuntos: ptsDist, pickem: { esperado: opt.s, maximo: P.reduce((t, m) => t + m.pts, 0), ganadores: opt.w } };
   }
 
   // ---------- Orquestación ----------
