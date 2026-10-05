@@ -310,15 +310,23 @@
   // ---------- Pick'em ----------
   function renderPickem() {
     const B = R.B, P = R.partidos;
-    const lista = (ganadores) => P.map((m, k) => {
-      const t = ganadores[k];
-      const v = B.res[k].gana[t] || 0;
-      const fijo = R.bloqueos[m.id] ? ' ✓' : '';
-      return `<div class="pick"><span>${esc(m.nombre)}</span><span class="tag">${esc(t)}${fijo}</span><span class="num">${pct(v)}</span></div>`;
-    }).join('');
+    const lista = (ganadores) => {
+      const W = {}, L = {};
+      const pos = (x) => (x[0] === 'S' ? SEEDS[x[1]] : x[0] === 'W' ? W[x[1]] : L[x[1]]);
+      return P.map((m, k) => {
+        const t = ganadores[k], a = pos(m.a), b = pos(m.b), rival = t === a ? b : a;
+        W[m.id] = t; L[m.id] = rival;
+        const v = B.res[k].gana[t] || 0;
+        const cara = R.S(t, rival, m.bo).p;
+        const fijo = R.bloqueos[m.id] ? ' ✓' : '';
+        return `<div class="pick"><span>${esc(m.nombre)} <span class="muted mono">· ${m.pts} pts</span><div class="gs">vs ${esc(rival)} · ${pct(cara, 0)} si se da el cruce</div></span><span class="tag">${esc(t)}${fijo}</span><span class="num" title="Probabilidad de que este equipo gane este partido en la realidad">${pct(v)}</span></div>`;
+      }).join('');
+    };
+    const ev = (g) => P.reduce((s, m, k) => s + m.pts * (B.res[k].gana[g[k]] || 0), 0);
+    const fmt = (x) => x.toFixed(1).replace('.', ',');
     $('pickem').innerHTML = `
-      <div><h3>Pick'em óptimo</h3><p class="note" style="margin:6px 0">Llave coherente que maximiza los aciertos esperados: ${B.pickem.esperado.toFixed(2).replace('.', ',')} de 14. El porcentaje es la probabilidad de acertar ese pick.</p><div class="pick-list">${lista(B.pickem.ganadores)}</div></div>
-      <div><h3>Llave más probable</h3><p class="note" style="margin:6px 0">El desenlace completo con mayor probabilidad conjunta (${pct(B.masProbable.p, 2)}). Sirve de referencia; para puntuar conviene la columna de la izquierda.</p><div class="pick-list">${lista(B.masProbable.ganadores)}</div></div>`;
+      <div><h3>Pick'em óptimo</h3><p class="note" style="margin:6px 0">Llave coherente que maximiza los puntos esperados con la puntuación oficial (superior 10/15/20, inferior 15/20/30/40, final 50): ${fmt(B.pickem.esperado)} de ${B.pickem.maximo}. A la derecha, la probabilidad de acertar cada pick.</p><div class="pick-list">${lista(B.pickem.ganadores)}</div></div>
+      <div><h3>Llave más probable</h3><p class="note" style="margin:6px 0">El desenlace completo con mayor probabilidad conjunta (${pct(B.masProbable.p, 2)}). Puntos esperados: ${fmt(ev(B.masProbable.ganadores))}.</p><div class="pick-list">${lista(B.masProbable.ganadores)}</div></div>`;
   }
 
   // ---------- Grupos ----------

@@ -376,27 +376,28 @@
   // ---------- Capa 6: llave ----------
   function partidos(cruzar) {
     return [
-      { id: 'UQ1', nombre: 'Cuartos superiores 1', bo: 3, a: ['S', 0], b: ['S', 1] },
-      { id: 'UQ2', nombre: 'Cuartos superiores 2', bo: 3, a: ['S', 2], b: ['S', 3] },
-      { id: 'UQ3', nombre: 'Cuartos superiores 3', bo: 3, a: ['S', 4], b: ['S', 5] },
-      { id: 'UQ4', nombre: 'Cuartos superiores 4', bo: 3, a: ['S', 6], b: ['S', 7] },
-      { id: 'USF1', nombre: 'Semifinal superior 1', bo: 3, a: ['W', 'UQ1'], b: ['W', 'UQ2'] },
-      { id: 'USF2', nombre: 'Semifinal superior 2', bo: 3, a: ['W', 'UQ3'], b: ['W', 'UQ4'] },
-      { id: 'LR1A', nombre: 'Inferior ronda 1 · A', bo: 3, a: ['L', 'UQ1'], b: ['L', 'UQ2'] },
-      { id: 'LR1B', nombre: 'Inferior ronda 1 · B', bo: 3, a: ['L', 'UQ3'], b: ['L', 'UQ4'] },
-      { id: 'UF', nombre: 'Final superior', bo: 3, a: ['W', 'USF1'], b: ['W', 'USF2'] },
-      { id: 'LR2A', nombre: 'Inferior ronda 2 · A', bo: 3, a: ['L', 'USF1'], b: ['W', cruzar ? 'LR1B' : 'LR1A'] },
-      { id: 'LR2B', nombre: 'Inferior ronda 2 · B', bo: 3, a: ['L', 'USF2'], b: ['W', cruzar ? 'LR1A' : 'LR1B'] },
-      { id: 'LR3', nombre: 'Inferior ronda 3', bo: 3, a: ['W', 'LR2A'], b: ['W', 'LR2B'] },
-      { id: 'LF', nombre: 'Final inferior', bo: 5, a: ['L', 'UF'], b: ['W', 'LR3'] },
-      { id: 'GF', nombre: 'Gran final', bo: 5, a: ['W', 'UF'], b: ['W', 'LF'] },
+      { id: 'UQ1', pts: 10, nombre: 'Superior R1 · 1', bo: 3, a: ['S', 0], b: ['S', 1] },
+      { id: 'UQ2', pts: 10, nombre: 'Superior R1 · 2', bo: 3, a: ['S', 2], b: ['S', 3] },
+      { id: 'UQ3', pts: 10, nombre: 'Superior R1 · 3', bo: 3, a: ['S', 4], b: ['S', 5] },
+      { id: 'UQ4', pts: 10, nombre: 'Superior R1 · 4', bo: 3, a: ['S', 6], b: ['S', 7] },
+      { id: 'USF1', pts: 15, nombre: 'Superior R2 · 1', bo: 3, a: ['W', 'UQ1'], b: ['W', 'UQ2'] },
+      { id: 'USF2', pts: 15, nombre: 'Superior R2 · 2', bo: 3, a: ['W', 'UQ3'], b: ['W', 'UQ4'] },
+      { id: 'LR1A', pts: 15, nombre: 'Inferior R1 · 1', bo: 3, a: ['L', 'UQ1'], b: ['L', 'UQ2'] },
+      { id: 'LR1B', pts: 15, nombre: 'Inferior R1 · 2', bo: 3, a: ['L', 'UQ3'], b: ['L', 'UQ4'] },
+      { id: 'UF', pts: 20, nombre: 'Final superior', bo: 3, a: ['W', 'USF1'], b: ['W', 'USF2'] },
+      { id: 'LR2A', pts: 20, nombre: 'Inferior R2 · 1', bo: 3, a: ['L', 'USF1'], b: ['W', cruzar ? 'LR1B' : 'LR1A'] },
+      { id: 'LR2B', pts: 20, nombre: 'Inferior R2 · 2', bo: 3, a: ['L', 'USF2'], b: ['W', cruzar ? 'LR1A' : 'LR1B'] },
+      { id: 'LR3', pts: 30, nombre: 'Inferior semifinal', bo: 3, a: ['W', 'LR2A'], b: ['W', 'LR2B'] },
+      { id: 'LF', pts: 40, nombre: 'Final inferior', bo: 5, a: ['L', 'UF'], b: ['W', 'LR3'] },
+      { id: 'GF', pts: 50, nombre: 'Gran final', bo: 5, a: ['W', 'UF'], b: ['W', 'LF'] },
     ];
   }
 
   const PUESTOS = { GF: ['1°', '2°'], LF: [null, '3°'], LR3: [null, '4°'], LR2A: [null, '5-6°'], LR2B: [null, '5-6°'], LR1A: [null, '7-8°'], LR1B: [null, '7-8°'] };
 
   // S(i, j, bo) -> P(i gana). bloqueos: { id: codigoGanador }
-  function llave(seeds, S, cruzar, bloqueos) {
+  function llave(seeds, S, cruzar, bloqueos, pickemFijo) {
+    const ptsDist = {};
     const P = partidos(cruzar);
     const K = P.length;
     const pos = Object.fromEntries(P.map((m, k) => [m.id, k]));
@@ -424,6 +425,11 @@
           }
         }
         if (prob > mejor.p) mejor = { p: prob, w: W.slice() };
+        if (pickemFijo) {
+          let pts = 0;
+          for (let q = 0; q < K; q++) if (W[q] === pickemFijo[q]) pts += P[q].pts;
+          ptsDist[pts] = (ptsDist[pts] || 0) + prob;
+        }
         return;
       }
       const a = quien(P[k].a), b = quien(P[k].b);
@@ -438,7 +444,7 @@
     for (const r of res) for (const o of [r.aparece, r.gana, r.cruces]) for (const k in o) o[k] *= norm;
     for (const t in puesto) for (const k in puesto[t]) puesto[t][k] *= norm;
 
-    // Pick'em óptimo: maximiza aciertos esperados (1 punto por partido) sobre llaves coherentes
+    // Pick'em óptimo: maximiza los puntos esperados (puntos por partido del pick'em oficial) sobre llaves coherentes
     let opt = { s: -1, w: null };
     (function rec2(k, s) {
       if (k === K) { if (s > opt.s) opt = { s, w: W.slice() }; return; }
@@ -447,11 +453,11 @@
       for (const [w, l] of [[a, b], [b, a]]) {
         if (lock && lock !== w && (lock === a || lock === b)) continue;
         W[k] = w; L[k] = l;
-        rec2(k + 1, s + (res[k].gana[w] || 0));
+        rec2(k + 1, s + P[k].pts * (res[k].gana[w] || 0));
       }
     })(0, 0);
 
-    return { partidos: P, res, puesto, masProbable: { p: mejor.p * norm, ganadores: mejor.w }, pickem: { esperado: opt.s, ganadores: opt.w } };
+    return { partidos: P, res, puesto, masProbable: { p: mejor.p * norm, ganadores: mejor.w }, pickem: { esperado: opt.s, maximo: P.reduce((t, m) => t + m.pts, 0), ganadores: opt.w } };
   }
 
   // ---------- Orquestación ----------
